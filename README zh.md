@@ -41,7 +41,7 @@ pip3 install -e .
 https://pypi.org/project/cyclonedds/#installing-with-pre-built-binaries
 
 # 使用
-python sdk2 接口与 unitree_skd2的接口保持一致，通过请求响应或订阅发布topic实现机器人的状态获取和控制。相应的例程位于`/example`目录下。在运行例程前，需要根据文档 https://support.unitree.com/home/zh/developer/Quick_start 配置好机器人的网络连接。
+python sdk2 接口与 unitree_skd2的接口保持一致，通过请求响应或订阅发布topic实现机器人的状态获取和控制。相应的例程位于`/example`目录下。在运行例程[...]
 ## DDS通讯
 在终端中执行：
 ```bash
@@ -91,7 +91,7 @@ python3 ./example/low_level/lowlevel_control.py enp2s0
 ```bash
 python3 ./example/low_level/lowlevel_control.py enp2s0
 ```
-其中 `enp2s0` 为机器人所连接的网卡名称，请根据实际情况修改。左后腿 hip 关节会保持在0角度 (安全起见，这里设置 kp=10, kd=1)，左后腿 calf 关节将持续输出 1Nm 的转矩。
+其中 `enp2s0` 为机器人所连接的网卡名称，请根据实际情况修改。左后腿 hip 关节会保持在0角度 (安全起见，这里设置 kp=10, kd=1)，左后腿 calf 关节将持[...]
 
 ## 遥控器状态获取
 终端中执行：
@@ -112,10 +112,39 @@ python3 ./example/front_camera/camera_opencv.py enp2s0
 ```bash
 python3 ./example/obstacles_avoid_switch/obstacles_avoid_switch.py enp2s0
 ```
-其中 `enp2s0` 为机器人所连接的网卡名称，请根据实际情况修改。机器人将循环开启和关闭避障功能。关于避障服务，详细见 https://support.unitree.com/home/zh/developer/ObstaclesAvoidClient
+其中 `enp2s0` 为机器人所连接的网卡名称，请根据实际情况修改。机器人将循环开启和关闭避障功能。关于避障服务，详细见 https://support.unitree.com/hom[...]
 
 ## 灯光音量控制
 ```bash
 python3 ./example/vui_client/vui_client_example.py enp2s0
 ```
-其中 `enp2s0` 为机器人所连接的网卡名称，请根据实际情况修改。机器人将循环调节音量和灯光亮度。该接口详细见 https://support.unitree.com/home/zh/developer/VuiClient
+其中 `enp2s0` 为机器人所连接的网卡名称，请根据实际情况修改。机器人将循环调节音量和灯光亮度。该接口详细见 https://support.unitree.com/home/zh/develop[...]
+
+---
+
+## 高层动作 & TTS（新增示例）
+
+- 使用 Python 导入高层动作封装（模拟模式，安全）:
+
+```bash
+python -c "from unitree_sdk2py.actions import Go2Actions; a=Go2Actions(simulate=True); a.stand(); a.move(0.2,0,0,duration=1.0)"
+```
+
+- 使用 CLI（模拟模式，安全）:
+
+```bash
+python -m unitree_sdk2py.cli stand
+python -m unitree_sdk2py.cli move --vx 0.2 --duration 2.0
+```
+
+- 生成喊麦 TTS（示例脚本保存在 仓库/百万/edge_tts_generate.py）:
+
+```bash
+pip install edge-tts
+python 百万/edge_tts_generate.py
+# 生成文件：erge_welcome.wav
+```
+
+注意：
+- 默认 `Go2Actions(simulate=True)` 为安全模式；如要向真实机器人发送命令请确保网络/机器人连接安全，再使用 `simulate=False` 或 CLI 的 `--no-sim` 开关。
+- 不建议把生成的 WAV 文件提交到仓库；脚本保留在 仓库/百万/，音频请本地生成或上传到 release/对象存储。
